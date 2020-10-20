@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseSlab {
-    private Integer min;
-    private Integer max;
+public class DiscountRate {
+
+    private PurchaseSlab purchaseSlab;
+    private int discount;
 }
