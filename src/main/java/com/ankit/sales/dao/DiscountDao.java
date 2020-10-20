@@ -8,5 +8,5 @@ import java.util.Map;
 
 public interface DiscountDao {
 
-    Map<CustomerType,List<DiscountRate>> findAllDiscountRates();
+    Map<CustomerType, List<DiscountRate>> findAllDiscountRates();
 }
