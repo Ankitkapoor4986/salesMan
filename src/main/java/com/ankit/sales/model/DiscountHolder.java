@@ -2,7 +2,7 @@ package com.ankit.sales.model;
 
 import lombok.Data;
 
-@Datag
+@Data
 public class DiscountHolder {
 
     private PurchaseSlab purchaseSlab;
