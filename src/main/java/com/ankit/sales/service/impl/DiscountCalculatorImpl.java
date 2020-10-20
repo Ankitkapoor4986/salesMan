@@ -23,25 +23,26 @@ public class DiscountCalculatorImpl implements DiscountCalculator {
                 .filter(discountRate -> discountRate.getPurchaseSlab().getMin() < amount)
                 .collect(Collectors.toList());
 
-        int discount = discountRates.stream().mapToInt(discountRate ->
+        int discount = discountRates.stream().filter(discountRate -> discountRate.getPurchaseSlab().getMax()<amount)
+                .mapToInt(discountRate ->
                 ((discountRate.getPurchaseSlab().getMax() * discountRate.getDiscount())
                         / 100)).sum();
-        Double addionalDiscount = calculateAdditionalDiscount(amount, discountRates);
+        Double addionalDiscount = calculateDiscountIfAmountIsBetween(amount, discountRates);
         return discount + addionalDiscount;
     }
 
-    private Double calculateAdditionalDiscount(double amount, List<DiscountRate> discountRates) {
+    private Double calculateDiscountIfAmountIsBetween(double amount, List<DiscountRate> discountRates) {
         Optional<DiscountRate> maximumDiscountRate = discountRates.stream().
                 max(Comparator.comparingInt(discountRate -> discountRate.getPurchaseSlab().getMax()));
 
         return maximumDiscountRate
-                .filter(maxDisRate -> maxDisRate.getPurchaseSlab().getMax() < amount)
+                .filter(maxDisRate -> maxDisRate.getPurchaseSlab().getMin() < amount)
                 .map(maxDisRate -> getAdditionalDiscount(amount, maxDisRate)).orElse(0.0);
 
     }
 
-    private Double getAdditionalDiscount(double amount, DiscountRate maxDisRate) {
-        double amountGreaterThanMax = (amount - maxDisRate.getPurchaseSlab().getMax());
-        return (amountGreaterThanMax * maxDisRate.getDiscount()) / 100;
+    private Double getAdditionalDiscount(double amount, DiscountRate discountRate) {
+        double amountGreaterThanMin = (amount - discountRate.getPurchaseSlab().getMin());
+        return (amountGreaterThanMin * discountRate.getDiscount()) / 100;
     }
 }
